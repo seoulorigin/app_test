@@ -45,97 +45,45 @@ class SearchPage extends StatelessWidget {
               color: Colors.white.withOpacity(0.95),
               child: Row(
                 children: [
-                  // 이미지 아이콘
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.image_outlined, color: Colors.black54),
-                  ),
-                  const SizedBox(width: 8),
-                  // 설정 아이콘
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.tune, color: Colors.black54),
-                  ),
-                  const SizedBox(width: 8),
-                  // 입력창
+                  // 입력창 (왼쪽부터 최대한 넓게)
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) {
-                            return Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: Container(
-                                color: Colors.white,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                child: TextField(
-                                  controller: _controller,
-                                  autofocus: true,
-                                  decoration: InputDecoration(
-                                    hintText: '무엇이든 부탁하세요',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.grey.shade100,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        height: 48,
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Text(
-                          '무엇이든 부탁하세요',
-                          style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                    child: Container(
+                      height: 48,
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: TextField(
+                        controller: _controller,
+                        decoration: InputDecoration(
+                          hintText: '무엇이든 부탁하세요',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          filled: true,
+                          fillColor: Colors.grey.shade100,
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // 마이크 아이콘
+                  // 검정색 동그라미 버튼 (위쪽 화살표)
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: 48,
+                    height: 48,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.mic, color: Colors.white),
-                  ),
-                  const SizedBox(width: 8),
-                  // 음성 아이콘 (파형)
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_upward, color: Colors.white),
+                      onPressed: () {
+                        // 원하는 동작 추가 가능
+                      },
                     ),
-                    child: Icon(Icons.graphic_eq, color: Colors.white),
                   ),
                 ],
               ),
