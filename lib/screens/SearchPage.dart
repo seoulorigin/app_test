@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/SearchResultPage.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -8,28 +9,26 @@ class SearchPage extends StatelessWidget {
     final TextEditingController _controller = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // 중앙 텍스트
-          Center(
-            child: Text(
-              '무엇을 도와드릴까요?',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: Text(
+                  '무엇을 도와드릴까요?',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-          // 하단 입력창
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
+            Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               color: Colors.white.withOpacity(0.95),
               child: Row(
                 children: [
-                  // 입력창 (왼쪽부터 최대한 넓게)
                   Expanded(
                     child: Container(
                       height: 48,
@@ -40,6 +39,17 @@ class SearchPage extends StatelessWidget {
                       ),
                       child: TextField(
                         controller: _controller,
+                        onSubmitted: (_) {
+                          final question = _controller.text.trim();
+                          if (question.isNotEmpty) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchResultPage(initialQuestion: question),
+                              ),
+                            );
+                          }
+                        },
                         decoration: InputDecoration(
                           hintText: '무엇이든 부탁하세요',
                           border: OutlineInputBorder(
@@ -54,7 +64,6 @@ class SearchPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // 검정색 동그라미 버튼 (위쪽 화살표)
                   Container(
                     width: 48,
                     height: 48,
@@ -65,15 +74,23 @@ class SearchPage extends StatelessWidget {
                     child: IconButton(
                       icon: Icon(Icons.arrow_upward, color: Colors.white),
                       onPressed: () {
-                        // 원하는 동작 추가 가능
+                        final question = _controller.text.trim();
+                        if (question.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchResultPage(initialQuestion: question),
+                            ),
+                          );
+                        }
                       },
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
