@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/SearchResultPage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -10,26 +9,44 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
+  final List<Map<String, String>> _messages = [];
+  final ScrollController _scrollController = ScrollController();
+  bool _showChat = false;
 
   @override
   void dispose() {
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  void _goToResultPage() async {
+  void _search() {
     final question = _controller.text.trim();
-    if (question.isNotEmpty) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SearchResultPage(initialQuestion: question),
-        ),
-      );
-      // SearchResultPage에서 돌아오면 입력값을 지움
+    if (question.isEmpty) return;
+    setState(() {
+      if (!_showChat) _showChat = true;
+      _messages.add({'role': 'user', 'text': question});
+      _messages.add({'role': 'bot', 'text': '이것은 "$question"에 대한 임시 답변입니다.'});
       _controller.clear();
-      setState(() {});
-    }
+    });
+    // 스크롤을 맨 아래로 이동
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  void _reset() {
+    setState(() {
+      _showChat = false;
+      _messages.clear();
+      _controller.clear();
+    });
   }
 
   @override
@@ -40,16 +57,74 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           children: [
             Expanded(
-              child: Center(
-                child: Text(
-                  '무엇을 도와드릴까요?',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              child: _showChat
+                  ? Column(
+                      children: [
+                        // 상단에 뒤로가기 버튼과 가운데 정렬된 타이틀
+                        Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: IconButton(
+                                  icon: const Icon(Icons.arrow_back),
+                                  onPressed: _reset,
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  '검색 결과',
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Divider 제거, 배경색 통일
+                        Expanded(
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            itemCount: _messages.length,
+                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                            itemBuilder: (context, index) {
+                              final msg = _messages[index];
+                              final isUser = msg['role'] == 'user';
+                              return Align(
+                                alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    color: isUser ? Colors.black : Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
+                                  child: Text(
+                                    msg['text'] ?? '',
+                                    style: TextStyle(
+                                      color: isUser ? Colors.white : Colors.black87,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : Center(
+                      child: Text(
+                        '무엇을 도와드릴까요?',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -66,7 +141,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       child: TextField(
                         controller: _controller,
-                        onSubmitted: (_) => _goToResultPage(),
+                        onSubmitted: (_) => _search(),
                         decoration: InputDecoration(
                           hintText: '무엇이든 부탁하세요',
                           border: OutlineInputBorder(
@@ -90,7 +165,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     child: IconButton(
                       icon: Icon(Icons.arrow_upward, color: Colors.white),
-                      onPressed: _goToResultPage,
+                      onPressed: _search,
                     ),
                   ),
                 ],
