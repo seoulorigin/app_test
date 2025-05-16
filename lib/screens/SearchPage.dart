@@ -1,12 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/SearchResultPage.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
   @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _goToResultPage() async {
+    final question = _controller.text.trim();
+    if (question.isNotEmpty) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SearchResultPage(initialQuestion: question),
+        ),
+      );
+      // SearchResultPage에서 돌아오면 입력값을 지움
+      _controller.clear();
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -39,17 +66,7 @@ class SearchPage extends StatelessWidget {
                       ),
                       child: TextField(
                         controller: _controller,
-                        onSubmitted: (_) {
-                          final question = _controller.text.trim();
-                          if (question.isNotEmpty) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SearchResultPage(initialQuestion: question),
-                              ),
-                            );
-                          }
-                        },
+                        onSubmitted: (_) => _goToResultPage(),
                         decoration: InputDecoration(
                           hintText: '무엇이든 부탁하세요',
                           border: OutlineInputBorder(
@@ -73,17 +90,7 @@ class SearchPage extends StatelessWidget {
                     ),
                     child: IconButton(
                       icon: Icon(Icons.arrow_upward, color: Colors.white),
-                      onPressed: () {
-                        final question = _controller.text.trim();
-                        if (question.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SearchResultPage(initialQuestion: question),
-                            ),
-                          );
-                        }
-                      },
+                      onPressed: _goToResultPage,
                     ),
                   ),
                 ],
