@@ -51,8 +51,17 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> faqList = [
+      '앱 사용 방법이 궁금해요.',
+      '비밀번호를 잊어버렸어요.',
+      '회원 탈퇴는 어떻게 하나요?',
+      '포인트 적립은 어떻게 하나요?',
+      '배송 조회는 어디서 하나요?',
+      '환불은 언제 되나요?',
+    ];
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Column(
           children: [
@@ -60,7 +69,6 @@ class _SearchPageState extends State<SearchPage> {
               child: _showChat
                   ? Column(
                       children: [
-                        // 상단에 뒤로가기 버튼과 가운데 정렬된 타이틀
                         Container(
                           color: Colors.white,
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -83,7 +91,6 @@ class _SearchPageState extends State<SearchPage> {
                             ],
                           ),
                         ),
-                        // Divider 제거, 배경색 통일
                         Expanded(
                           child: ListView.builder(
                             controller: _scrollController,
@@ -115,15 +122,65 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       ],
                     )
-                  : Center(
-                      child: Text(
-                        '무엇을 도와드릴까요?',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                  : Column(
+                      children: [
+                        const SizedBox(height: 40),
+                        const Text(
+                          '무엇을 도와드릴까요?',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                        const SizedBox(height: 20),
+                        // 카드 목록 (스크롤 가능, 한 화면에 3개 보이도록 Expanded)
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: faqList.length,
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+                            itemBuilder: (context, i) {
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: Card(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                  color: Colors.primaries[i % Colors.primaries.length].shade100,
+                                  child: SizedBox(
+                                    height: 120,
+                                    child: Center(
+                                      child: Text(
+                                        faqList[i],
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        // 답변하러 가기 버튼
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(32, 8, 32, 16),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                              ),
+                              child: const Text('답변하러 가기', style: TextStyle(fontSize: 18)),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
             ),
             Container(
