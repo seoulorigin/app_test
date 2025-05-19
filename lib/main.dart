@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/index.dart';
+import 'package:flutter_application_1/screens/SearchPage.dart';
 void main() {
   runApp(const MyApp());
 }
