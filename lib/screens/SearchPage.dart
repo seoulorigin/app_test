@@ -153,16 +153,32 @@ class _SearchPageState extends State<SearchPage> {
                       )
                       : Column(
                         children: [
-                          const SizedBox(height: 20),
-                          const Text(
-                            '무엇을 도와드릴까요?',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                          const SizedBox(height: 5),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.menu, size: 28),
+                                  onPressed: () {},
+                                ),
+                                const Text(
+                                  '무엇을 도와드릴까요?',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.person_outline, size: 28),
+                                  onPressed: () {},
+                                ),
+                              ],
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 5),
                           // 카드 목록 (스크롤 가능, 한 화면에 3개 보이도록 Expanded)
                           Expanded(
                             child: ListView.builder(
