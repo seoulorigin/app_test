@@ -23,6 +23,8 @@ class _SearchPageState extends State<SearchPage> {
   void _search() {
     final question = _controller.text.trim();
     if (question.isEmpty) return;
+    // 키보드 내리기
+    FocusScope.of(context).unfocus();
     setState(() {
       if (!_showChat) _showChat = true;
       _messages.add({'role': 'user', 'text': question});
@@ -42,6 +44,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _reset() {
+    // 키보드 내리기
+    FocusScope.of(context).unfocus();
     setState(() {
       _showChat = false;
       _messages.clear();
