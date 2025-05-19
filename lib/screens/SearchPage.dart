@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'MenuDrawer.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -67,202 +68,183 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
+      drawer: const MenuDrawer(),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
-              child:
-                  _showChat
-                      ? Column(
-                        children: [
-                          Container(
-                            color: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 8,
-                            ),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.arrow_back),
-                                    onPressed: _reset,
-                                  ),
+              child: _showChat
+                  ? Column(
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: IconButton(
+                                  icon: const Icon(Icons.arrow_back),
+                                  onPressed: _reset,
                                 ),
-                                Center(
+                              ),
+                              Center(
+                                child: Text(
+                                  '검색 결과',
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            itemCount: _messages.length,
+                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                            itemBuilder: (context, index) {
+                              final msg = _messages[index];
+                              final isUser = msg['role'] == 'user';
+                              return Align(
+                                alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    color: isUser ? Colors.black : Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
                                   child: Text(
-                                    '검색 결과',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                                    msg['text'] ?? '',
+                                    style: TextStyle(
+                                      color: isUser ? Colors.white : Colors.black87,
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
-                          Expanded(
-                            child: ListView.builder(
-                              controller: _scrollController,
-                              itemCount: _messages.length,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16,
-                                horizontal: 16,
-                              ),
-                              itemBuilder: (context, index) {
-                                final msg = _messages[index];
-                                final isUser = msg['role'] == 'user';
-                                return Align(
-                                  alignment:
-                                      isUser
-                                          ? Alignment.centerRight
-                                          : Alignment.centerLeft,
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                      horizontal: 16,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          isUser
-                                              ? Colors.black
-                                              : Colors.grey.shade200,
-                                      borderRadius: BorderRadius.circular(18),
-                                    ),
-                                    child: Text(
-                                      msg['text'] ?? '',
-                                      style: TextStyle(
-                                        color:
-                                            isUser
-                                                ? Colors.white
-                                                : Colors.black87,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      )
-                      : Column(
-                        children: [
-                          const SizedBox(height: 5),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        const SizedBox(height: 5),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Builder(
+                                builder: (context) => IconButton(
                                   icon: const Icon(Icons.menu, size: 28),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Scaffold.of(context).openDrawer();
+                                  },
                                 ),
-                                const Text(
-                                  '무엇을 도와드릴까요?',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.person_outline, size: 28),
-                                  onPressed: () {},
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          // 카드 목록 (스크롤 가능, 한 화면에 3개 보이도록 Expanded)
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: faqList.length,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 0,
                               ),
-                              itemBuilder: (context, i) {
-                                return Container(
-                                  margin: const EdgeInsets.only(bottom: 12),
-                                  child: Card(
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
+                              const Text(
+                                '무엇을 도와드릴까요?',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.person_outline, size: 28),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        // 카드 목록 (스크롤 가능, 한 화면에 3개 보이도록 Expanded)
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: faqList.length,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 0,
+                            ),
+                            itemBuilder: (context, i) {
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: Card(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  color:
+                                      Colors
+                                          .primaries[i %
+                                              Colors.primaries.length]
+                                          .shade100,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 10,
                                     ),
-                                    color:
-                                        Colors
-                                            .primaries[i %
-                                                Colors.primaries.length]
-                                            .shade100,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 10,
-                                      ),
-                                      constraints: const BoxConstraints(
-                                        minHeight: 80,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          faqList[i],
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                    constraints: const BoxConstraints(
+                                      minHeight: 80,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        faqList[i],
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
-                          // 답변하러 가기 버튼
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(24),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 8,
-                                  offset: Offset(0, -2),
-                                ),
-                              ],
+                        ),
+                        // 답변하러 가기 버튼
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(24),
                             ),
-                            padding: const EdgeInsets.fromLTRB(32, 10, 32, 0),
-                            child: Container(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  backgroundColor: Colors.black,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 8,
+                                offset: Offset(0, -2),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.fromLTRB(32, 10, 32, 0),
+                          child: Container(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
-                                child: const Text(
-                                  '답변하러 가기',
-                                  style: TextStyle(fontSize: 18),
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
                                 ),
                               ),
+                              child: const Text(
+                                '답변하러 가기',
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
