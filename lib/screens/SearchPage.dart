@@ -66,7 +66,6 @@ class _SearchPageState extends State<SearchPage> {
       '가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하',
     ];
     return Scaffold(
-      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       drawer: const MenuDrawer(),
       body: SafeArea(
