@@ -4,6 +4,7 @@ import 'user_info/email_verification_page.dart';
 import '../widgets/chat/answered_question_message.dart';
 import '../widgets/chat/unanswered_question_message.dart';
 import '../widgets/chat/new_question_message.dart';
+import 'UnansweredQuestionsPage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -334,7 +335,14 @@ class _SearchPageState extends State<SearchPage> {
                               child: Container(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const UnansweredQuestionsPage(),
+                                      ),
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(24),
