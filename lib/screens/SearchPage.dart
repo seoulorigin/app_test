@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'MenuDrawer.dart';
 import 'user_info/email_verification_page.dart';
+import '../widgets/chat/answered_question_message.dart';
+import '../widgets/chat/unanswered_question_message.dart';
+import '../widgets/chat/new_question_message.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -29,20 +32,87 @@ class _SearchPageState extends State<SearchPage> {
     FocusScope.of(context).unfocus();
     setState(() {
       if (!_showChat) _showChat = true;
-      _messages.add({'role': 'user', 'text': question});
-      _messages.add({'role': 'bot', 'text': '이것은 "$question"에 대한 임시 답변입니다.'});
+      
+      _messages.add({
+        'role': 'user',
+        'text': question,
+      });
+
+      // 테스트용 조건 추가
+      if (question == "a") {
+        _messages.add({
+          'role': 'bot',
+          'type': 'answered',
+          'text': question,
+          'answer': '이것은 답변된 질문입니다.',
+        });
+      } else if (question == "b") {
+        _messages.add({
+          'role': 'bot',
+          'type': 'unanswered',
+          'text': question,
+        });
+      } else if (question == "c") {
+        _messages.add({
+          'role': 'bot',
+          'type': 'new',
+          'text': question,
+        });
+      } else {
+        _messages.add({
+          'role': 'bot',
+          'type': 'new',
+          'text': question,
+        });
+      }
+      
       _controller.clear();
     });
-    // 스크롤을 맨 아래로 이동
+    // 스크롤을 맨 위로 이동
     Future.delayed(const Duration(milliseconds: 100), () {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
+          0,
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
         );
       }
     });
+  }
+
+  void _handleLike() {
+    // TODO: 좋아요 처리 로직 구현
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('좋아요가 반영되었습니다.')),
+    );
+  }
+
+  void _handleDislike() {
+    // TODO: 싫어요 처리 로직 구현
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('싫어요가 반영되었습니다.')),
+    );
+  }
+
+  void _handleNewQuestion() {
+    // TODO: 새 질문 등록 페이지로 이동
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('새 질문 등록 페이지로 이동합니다.')),
+    );
+  }
+
+  void _handleNotify() {
+    // TODO: 알림 설정 로직 구현
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('답변 알림이 설정되었습니다.')),
+    );
+  }
+
+  void _handleAskQuestion() {
+    // TODO: 질문하기 페이지로 이동
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('질문하기 페이지로 이동합니다.')),
+    );
   }
 
   void _reset() {
@@ -113,24 +183,49 @@ class _SearchPageState extends State<SearchPage> {
                                 itemBuilder: (context, index) {
                                   final msg = _messages[index];
                                   final isUser = msg['role'] == 'user';
-                                  return Align(
-                                    alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(vertical: 4),
-                                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                                      decoration: BoxDecoration(
-                                        color: isUser ? Colors.black : Colors.grey.shade200,
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
-                                      child: Text(
-                                        msg['text'] ?? '',
-                                        style: TextStyle(
-                                          color: isUser ? Colors.white : Colors.black87,
-                                          fontSize: 16,
+                                  
+                                  if (isUser) {
+                                    return Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 4),
+                                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius: BorderRadius.circular(18),
+                                        ),
+                                        child: Text(
+                                          msg['text'] ?? '',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
+
+                                  // 봇 메시지 처리
+                                  final type = msg['type'] as String?;
+                                  if (type == 'answered') {
+                                    return AnsweredQuestionMessage(
+                                      question: msg['text'] ?? '',
+                                      answer: msg['answer'] ?? '',
+                                      onLike: _handleLike,
+                                      onDislike: _handleDislike,
+                                    );
+                                  } else if (type == 'unanswered') {
+                                    return UnansweredQuestionMessage(
+                                      question: msg['text'] ?? '',
+                                      onNewQuestion: _handleNewQuestion,
+                                      onNotify: _handleNotify,
+                                    );
+                                  } else {
+                                    return NewQuestionMessage(
+                                      question: msg['text'] ?? '',
+                                      onAskQuestion: _handleAskQuestion,
+                                    );
+                                  }
                                 },
                               ),
                             ),
