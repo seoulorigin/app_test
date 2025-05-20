@@ -17,11 +17,13 @@ class _NicknameInputPageState extends State<NicknameInputPage> {
     super.dispose();
   }
 
-  void _nextStep() {
+  void _next() {
     if (_nicknameController.text.isNotEmpty) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const SignupCompletePage()),
+        MaterialPageRoute(
+          builder: (context) => const SignupCompletePage(),
+        ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -40,33 +42,41 @@ class _NicknameInputPageState extends State<NicknameInputPage> {
         elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
+            const Text(
+              '사용할 닉네임을 입력해주세요',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 32),
             TextField(
               controller: _nicknameController,
-              decoration: InputDecoration(
-                labelText: '닉네임',
-                hintText: '사용할 닉네임을 입력하세요',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              decoration: const InputDecoration(
+                hintText: '닉네임',
+                border: OutlineInputBorder(),
               ),
-              maxLength: 20,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _next(),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _nextStep,
+              onPressed: _next,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('다음'),
+              child: const Text(
+                '다음',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           ],
         ),

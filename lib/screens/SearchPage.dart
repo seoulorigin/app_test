@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'MenuDrawer.dart';
+import 'user_info/email_verification_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -154,7 +155,14 @@ class _SearchPageState extends State<SearchPage> {
                               ),
                               IconButton(
                                 icon: const Icon(Icons.person_outline, size: 28),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const EmailVerificationPage(),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),

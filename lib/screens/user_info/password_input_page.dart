@@ -21,11 +21,13 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
     super.dispose();
   }
 
-  void _nextStep() {
+  void _next() {
     if (_passwordController.text == _confirmPasswordController.text) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const NicknameInputPage()),
+        MaterialPageRoute(
+          builder: (context) => const NicknameInputPage(),
+        ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -44,19 +46,23 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
         elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
+            const Text(
+              '비밀번호를 설정해주세요',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 32),
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(
-                labelText: '비밀번호',
-                hintText: '8자 이상 입력해주세요',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                hintText: '비밀번호',
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscurePassword ? Icons.visibility : Icons.visibility_off,
@@ -74,11 +80,8 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
             TextField(
               controller: _confirmPasswordController,
               decoration: InputDecoration(
-                labelText: '비밀번호 확인',
-                hintText: '비밀번호를 한번 더 입력해주세요',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                hintText: '비밀번호 확인',
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
@@ -94,15 +97,18 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _nextStep,
+              onPressed: _next,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('다음'),
+              child: const Text(
+                '다음',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           ],
         ),

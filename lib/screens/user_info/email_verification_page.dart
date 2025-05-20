@@ -31,7 +31,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
     // TODO: 실제 인증 코드 확인 로직 구현
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const PasswordInputPage()),
+      MaterialPageRoute(
+        builder: (context) => const PasswordInputPage(),
+      ),
     );
   }
 
@@ -45,60 +47,74 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
+            const Text(
+              '이메일 주소를 입력해주세요',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 32),
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(
-                labelText: '이메일',
-                hintText: 'example@email.com',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              decoration: const InputDecoration(
+                hintText: '이메일 주소',
+                border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.emailAddress,
             ),
-            const SizedBox(height: 16),
-            if (!_isCodeSent)
-              ElevatedButton(
-                onPressed: _sendVerificationCode,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _sendVerificationCode,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text('인증 코드 전송'),
-              )
-            else ...[
-              TextField(
-                controller: _verificationCodeController,
-                decoration: InputDecoration(
-                  labelText: '인증 코드',
-                  hintText: '전송된 인증 코드를 입력하세요',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _verifyCode,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text('인증 코드 확인'),
+              child: const Text(
+                '인증 코드 받기',
+                style: TextStyle(fontSize: 16),
               ),
-            ],
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              '인증 코드를 입력해주세요',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 32),
+            TextField(
+              controller: _verificationCodeController,
+              decoration: const InputDecoration(
+                hintText: '인증 코드',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              enabled: _isCodeSent,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _isCodeSent ? _verifyCode : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                '인증하기',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
           ],
         ),
       ),
