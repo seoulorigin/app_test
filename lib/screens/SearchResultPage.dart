@@ -88,11 +88,11 @@ class _SearchResultPageState extends State<SearchResultPage> {
       }
     });
 
-    // 스크롤을 맨 위로 이동
+    // 스크롤을 맨 위로 이동하여 최신 메시지만 보이도록 함
     Future.delayed(const Duration(milliseconds: 100), () {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
-          0,
+          _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
         );
