@@ -58,13 +58,48 @@ class _SearchResultPageState extends State<SearchResultPage> {
     // 키보드 내리기
     FocusScope.of(context).unfocus();
     
-    // 새로운 SearchResultPage로 이동
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SearchResultPage(initialQuestion: question),
-      ),
-    );
+    setState(() {
+      // 사용자 메시지 추가
+      _messages.add({
+        'role': 'user',
+        'text': question,
+      });
+
+      // 검색어에 따라 다른 메시지 타입 설정
+      if (question == "a") {
+        _messages.add({
+          'role': 'bot',
+          'type': 'answered',
+          'text': question,
+          'answer': '이것은 답변된 질문입니다.',
+        });
+      } else if (question == "b") {
+        _messages.add({
+          'role': 'bot',
+          'type': 'unanswered',
+          'text': question,
+        });
+      } else {
+        _messages.add({
+          'role': 'bot',
+          'type': 'new',
+          'text': question,
+        });
+      }
+    });
+
+    // 스크롤을 맨 위로 이동
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+
+    _controller.clear();
   }
 
   void _handleLike() {
